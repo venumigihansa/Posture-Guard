@@ -2,22 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:posture_guard/posture_controller.dart'; // Import your PostureController
 
 class StatsPage extends StatelessWidget {
+  final double slouchPercentage = 0.38; // Replace with your real-time data
+  final int slouchMinutes = 5;
+
+  final String dateRange = "${DateFormat('MMM dd').format(DateTime.now().subtract(const Duration(days: 6)))} - ${DateFormat('MMM dd').format(DateTime.now())}";
+
   @override
   Widget build(BuildContext context) {
-    // Access PostureController from the provider
-    final postureController = Provider.of<PostureController>(context);
-
-    // Get the slouch percentage from the controller
-    final slouchPercentage = postureController.slouchPercentage;
-    final slouchMinutes = postureController.slouchTime.inMinutes;
-
-    final String dateRange =
-        "${DateFormat('MMM dd').format(DateTime.now().subtract(const Duration(days: 6)))} - ${DateFormat('MMM dd').format(DateTime.now())}";
-
     return Container(
       color: Colors.grey[100],
       padding: const EdgeInsets.all(16.0),

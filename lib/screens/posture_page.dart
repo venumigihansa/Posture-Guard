@@ -27,6 +27,7 @@ class _PostureScreenState extends State<PostureScreen> {
   Future<void> _connectToMqtt({int retryCount = 0, int maxRetries = 5}) async {
     final provider = Provider.of<PostureController>(context, listen: false);
     provider.setPosture("Connecting to MQTT...", 0.0);
+    
 
     _client = MqttServerClient('218638469dfa429db85a2e1df0b4f8c7.s1.eu.hivemq.cloud', 'flutter_client');
     _client.port = 8883;
@@ -78,6 +79,8 @@ class _PostureScreenState extends State<PostureScreen> {
     _logger.info("Connected to MQTT broker");
     provider.setPosture("Connected to MQTT. Waiting for data...", 0.0);
     _client.subscribe('alert/posture', MqttQos.atMostOnce);
+    //start the time tracker when connected to mqtt
+    provider.startTracking();
 
     _client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> messages) {
       final MqttPublishMessage recMessage = messages[0].payload as MqttPublishMessage;
@@ -88,7 +91,10 @@ class _PostureScreenState extends State<PostureScreen> {
   }
 
   void _onDisconnected() {
+    final provider = Provider.of<PostureController>(context, listen: false);
     _logger.warning("Disconnected from MQTT broker");
+    //Stop time tracking when mqtt connection is lost 
+    provider.stopTracking();
   }
 
   void _onSubscribed(String topic) {
@@ -108,6 +114,8 @@ class _PostureScreenState extends State<PostureScreen> {
         Vibration.vibrate(duration: 1000);
       }
     }
+
+    
   }
 
   @override
