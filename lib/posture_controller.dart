@@ -16,6 +16,9 @@ class PostureController extends ChangeNotifier {
 
   late String _currentDateKey;
 
+  String _postureImage = 'lib/images/loading.png'; // Default image
+  String get postureImage => _postureImage;
+
   PostureController() {
     _currentDateKey = DateFormat('yyyy-MM-dd').format(DateTime.now());
   }
@@ -27,7 +30,6 @@ class PostureController extends ChangeNotifier {
     final now = DateTime.now();
     final newDateKey = DateFormat('yyyy-MM-dd').format(now);
 
-    // Check if the day changed
     if (newDateKey != _currentDateKey) {
       _currentDateKey = newDateKey;
       _connectedDuration = Duration.zero;
@@ -43,7 +45,12 @@ class PostureController extends ChangeNotifier {
     }
 
     postureStatus = newStatus;
-    saveDailyStat(); // Save current stat with every update
+    saveDailyStat();
+    notifyListeners();
+  }
+
+  void setPostureImage(String imagePath) {
+    _postureImage = imagePath;
     notifyListeners();
   }
 
@@ -51,7 +58,7 @@ class PostureController extends ChangeNotifier {
     _lastPostureChange = DateTime.now();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       _updateDurations();
-      saveDailyStat(); // Continuously update Hive every second
+      saveDailyStat();
     });
   }
 

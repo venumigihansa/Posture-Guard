@@ -5,11 +5,8 @@ import 'dart:convert';
 import 'package:provider/provider.dart';
 import 'package:posture_guard/posture_controller.dart';
 import 'package:vibration/vibration.dart';
-import 'package:logging/logging.dart'; // Logging
-import 'package:posture_guard/notification_service.dart'; // Import notification service
-
-
-
+import 'package:logging/logging.dart';
+import 'package:posture_guard/notification_service.dart';
 
 class PostureScreen extends StatefulWidget {
   const PostureScreen({super.key});
@@ -31,7 +28,7 @@ class _PostureScreenState extends State<PostureScreen> {
   Future<void> _connectToMqtt({int retryCount = 0, int maxRetries = 5}) async {
     final provider = Provider.of<PostureController>(context, listen: false);
     provider.setPosture("Connecting to MQTT...", 0.0);
-    
+    provider.setPostureImage('lib/images/loading.png');
 
     _client = MqttServerClient('218638469dfa429db85a2e1df0b4f8c7.s1.eu.hivemq.cloud', 'flutter_client');
     _client.port = 8883;
@@ -41,8 +38,6 @@ class _PostureScreenState extends State<PostureScreen> {
     _client.setProtocolV311();
     _client.onBadCertificate = (Object? cert) => true;
 
-
-    // Add handlers
     _client.onConnected = _onConnected;
     _client.onDisconnected = _onDisconnected;
     _client.onSubscribed = _onSubscribed;
@@ -55,6 +50,7 @@ class _PostureScreenState extends State<PostureScreen> {
 
     if (retryCount >= maxRetries) {
       provider.setPosture("Failed to connect after $maxRetries attempts.", 0.0);
+      provider.setPostureImage('lib/images/loading.png');
       return;
     }
 
@@ -65,6 +61,7 @@ class _PostureScreenState extends State<PostureScreen> {
       _logger.severe('Connection failed: $e');
       _client.disconnect();
       provider.setPosture("Connection failed. Retrying...", 0.0);
+      provider.setPostureImage('lib/images/loading.png');
       await Future.delayed(Duration(seconds: 2 * (retryCount + 1)));
       _connectToMqtt(retryCount: retryCount + 1, maxRetries: maxRetries);
       return;
@@ -75,6 +72,7 @@ class _PostureScreenState extends State<PostureScreen> {
     } else {
       _logger.warning('Failed to connect to MQTT (bad state)');
       provider.setPosture("Failed to connect to MQTT.", 0.0);
+      provider.setPostureImage('lib/images/loading.png');
     }
   }
 
@@ -82,8 +80,8 @@ class _PostureScreenState extends State<PostureScreen> {
     final provider = Provider.of<PostureController>(context, listen: false);
     _logger.info("Connected to MQTT broker");
     provider.setPosture("Connected to MQTT. Waiting for data...", 0.0);
+    provider.setPostureImage('lib/images/loading.png');
     _client.subscribe('alert/posture', MqttQos.atMostOnce);
-    //start the time tracker when connected to mqtt
     provider.startTracking();
 
     _client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> messages) {
@@ -97,7 +95,7 @@ class _PostureScreenState extends State<PostureScreen> {
   void _onDisconnected() {
     final provider = Provider.of<PostureController>(context, listen: false);
     _logger.warning("Disconnected from MQTT broker");
-    //Stop time tracking when mqtt connection is lost 
+    provider.setPostureImage('lib/images/loading.png');
     provider.stopTracking();
   }
 
@@ -114,18 +112,19 @@ class _PostureScreenState extends State<PostureScreen> {
     provider.setPosture(message, angle);
 
     if (message == 'Posture Alert! Continued Incorrect Posture') {
+      provider.setPostureImage('lib/images/bad posture.png');
       if (await Vibration.hasVibrator() ?? false) {
         Vibration.vibrate(duration: 1000);
       }
-
-          // Show the notification
       NotificationService.showNotification(
         'Posture Alert!',
         'Continued incorrect posture detected. Please correct your posture.',
       );
+    } else if (message.contains("Incorrect")) {
+      provider.setPostureImage('lib/images/bad posture.png');
+    } else if (message.contains("Posture Corrected")) {
+      provider.setPostureImage('lib/images/good posture.png');
     }
-
-    
   }
 
   @override
@@ -182,7 +181,7 @@ class _PostureScreenState extends State<PostureScreen> {
                 ),
                 child: Center(
                   child: Image.asset(
-                    'lib/images/spine.png',
+                    controller.postureImage,
                     width: size.width * 0.25,
                     height: size.width * 0.25,
                     fit: BoxFit.contain,
