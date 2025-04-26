@@ -31,6 +31,10 @@ class MyBottomNavBar extends StatelessWidget {
             text: 'Exercises',
             ),        
 
+          GButton(
+            icon: Icons.settings, 
+            text: 'settings',
+            ),        
 
             
       

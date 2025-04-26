@@ -35,6 +35,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
     ExercisesPage(),
 
+    ModernSettingsPage(),
+
+  
+
 
     //settings page
     //SettingsPage(),

@@ -30,7 +30,10 @@ class _PostureScreenState extends State<PostureScreen> {
     provider.setPosture("Connecting to MQTT...", 0.0);
     provider.setPostureImage('lib/images/loading.png');
 
-    _client = MqttServerClient('218638469dfa429db85a2e1df0b4f8c7.s1.eu.hivemq.cloud', 'flutter_client');
+    _client = MqttServerClient(
+      '218638469dfa429db85a2e1df0b4f8c7.s1.eu.hivemq.cloud',
+      'flutter_client',
+    );
     _client.port = 8883;
     _client.logging(on: true);
     _client.secure = true;
@@ -112,7 +115,7 @@ class _PostureScreenState extends State<PostureScreen> {
     provider.setPosture(message, angle);
 
     if (message == 'Posture Alert! Continued Incorrect Posture') {
-      provider.setPostureImage('lib/images/bad posture.png');
+      provider.setPostureImage('lib/images/bad_posture.png');
       if (await Vibration.hasVibrator() ?? false) {
         Vibration.vibrate(duration: 1000);
       }
@@ -121,9 +124,24 @@ class _PostureScreenState extends State<PostureScreen> {
         'Continued incorrect posture detected. Please correct your posture.',
       );
     } else if (message.contains("Incorrect")) {
-      provider.setPostureImage('lib/images/bad posture.png');
+      provider.setPostureImage('lib/images/bad_posture.png');
     } else if (message.contains("Posture Corrected")) {
-      provider.setPostureImage('lib/images/good posture.png');
+      provider.setPostureImage('lib/images/good_posture.png');
+      NotificationService.showNotification(
+        'Good Job!',
+        'Your posture has been corrected!',
+      );
+    } else if (message.contains("Idle for too long")) {
+      provider.setPostureImage('lib/images/idle.png'); // <<< Add an idle image
+      if (await Vibration.hasVibrator() ?? false) {
+        Vibration.vibrate(duration: 500);
+      }
+      NotificationService.showNotification(
+        'Idle Alert',
+        'You have been idle for too long. Time to move!',
+      );
+    } else {
+      _logger.warning('Received unknown message: $message');
     }
   }
 
