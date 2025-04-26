@@ -25,10 +25,14 @@ class MyBottomNavBar extends StatelessWidget {
             icon: Icons.bar_chart, 
             text: 'stats',
             ),
+
           GButton(
-            icon: Icons.settings, 
-            text: 'settings',
-            ),          
+            icon: Icons.fitness_center, 
+            text: 'Exercises',
+            ),        
+
+
+            
       
       ]),
     );

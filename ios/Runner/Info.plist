@@ -45,5 +45,16 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<!-- Allows HTTP (cleartext) traffic like Android's network_security_config -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+
+	<!-- Required for local/remote notification permissions -->
+	<key>NSUserNotificationUsageDescription</key>
+	<string>This app uses notifications to alert you about your posture.</string>
 </dict>
 </plist>

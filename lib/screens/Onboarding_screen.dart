@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:posture_guard/components/bottom_nav_bar.dart';
+import 'package:posture_guard/screens/exercises_page.dart';
 import 'package:posture_guard/screens/posture_page.dart';
 import 'package:posture_guard/screens/settings_page.dart';
 import 'package:posture_guard/screens/stats_page.dart';
@@ -32,8 +33,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     //stats page
     StatsPage(),
 
+    ExercisesPage(),
+
+
     //settings page
-    SettingsPage(),
+    //SettingsPage(),
+
+    //Exercises page
+
 
   ];
 

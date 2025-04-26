@@ -3,16 +3,22 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:posture_guard/screens/splash_screen.dart';
 import 'package:posture_guard/posture_controller.dart';
-import 'package:logging/logging.dart'; 
+import 'package:logging/logging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'notification_service.dart'; // Import notification service
+import 'package:posture_guard/Hive%20model/hive.dart'; // Correct the import path
 
-void main() async{
+void main() async {
   _setupLogging();
-  //initialize hive
+
+  // Initialize Hive
   await Hive.initFlutter();
+  Hive.registerAdapter(DailyPostureStatAdapter()); // Register the adapter for your model
 
-  //open the box
-  var box = await Hive.openBox('mybox');
+  var box = await Hive.openBox('mybox'); // Open a typed box
 
+  // Initialize notification service
+  await NotificationService.initialize();
 
   runApp(
     ChangeNotifierProvider(

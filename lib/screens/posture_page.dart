@@ -6,6 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:posture_guard/posture_controller.dart';
 import 'package:vibration/vibration.dart';
 import 'package:logging/logging.dart'; // Logging
+import 'package:posture_guard/notification_service.dart'; // Import notification service
+
+
+
 
 class PostureScreen extends StatefulWidget {
   const PostureScreen({super.key});
@@ -113,6 +117,12 @@ class _PostureScreenState extends State<PostureScreen> {
       if (await Vibration.hasVibrator() ?? false) {
         Vibration.vibrate(duration: 1000);
       }
+
+          // Show the notification
+      NotificationService.showNotification(
+        'Posture Alert!',
+        'Continued incorrect posture detected. Please correct your posture.',
+      );
     }
 
     

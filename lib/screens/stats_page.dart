@@ -3,20 +3,22 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:posture_guard/posture_controller.dart'; // Import your PostureController
+import 'package:posture_guard/Hive%20model/hive.dart'; // Import your Hive model
 
 class StatsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Access PostureController from the provider
     final postureController = Provider.of<PostureController>(context);
-
-    // Get the slouch percentage from the controller
     final slouchPercentage = postureController.slouchPercentage;
     final slouchMinutes = postureController.slouchTime.inMinutes;
 
     final String dateRange =
         "${DateFormat('MMM dd').format(DateTime.now().subtract(const Duration(days: 6)))} - ${DateFormat('MMM dd').format(DateTime.now())}";
+
+    List<DailyPostureStat> weekStats = postureController.getWeeklyStats();
+    List<double> slouchPercentages = weekStats.map((stat) => stat.slouchPercentage).toList();
 
     return Container(
       color: Colors.grey[100],
@@ -67,7 +69,7 @@ class StatsPage extends StatelessWidget {
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
-                ],  
+                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -101,7 +103,7 @@ class StatsPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Pie Chart Card with Side Legend
+            // Pie Chart Card
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -184,38 +186,26 @@ class StatsPage extends StatelessWidget {
                           children: const [
                             Icon(Icons.check_circle, color: Color(0xFFB5FCCD), size: 18),
                             SizedBox(width: 6),
-                            Text(
-                              "Good Posture",
-                              style: TextStyle(fontSize: 12, color: Colors.black87),
-                            ),
+                            Text("Good Posture", style: TextStyle(fontSize: 12, color: Colors.black87)),
                           ],
                         ),
                         const SizedBox(height: 4),
                         Text(
                           "${((1 - slouchPercentage) * 100).toStringAsFixed(0)}%",
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 12),
                         Row(
                           children: const [
                             Icon(Icons.warning_amber_rounded, color: Color(0xFF7AC6D2), size: 18),
                             SizedBox(width: 6),
-                            Text(
-                              "Slouching",
-                              style: TextStyle(fontSize: 12, color: Colors.black87),
-                            ),
+                            Text("Slouching", style: TextStyle(fontSize: 12, color: Colors.black87)),
                           ],
                         ),
                         const SizedBox(height: 4),
                         Text(
                           "${(slouchPercentage * 100).toStringAsFixed(0)}%",
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -258,7 +248,7 @@ class StatsPage extends StatelessWidget {
                       child: BarChart(
                         BarChartData(
                           alignment: BarChartAlignment.spaceAround,
-                          maxY: 10,
+                          maxY: 100,
                           gridData: FlGridData(show: false),
                           barTouchData: BarTouchData(enabled: false),
                           titlesData: FlTitlesData(
@@ -278,30 +268,24 @@ class StatsPage extends StatelessWidget {
                                 },
                               ),
                             ),
-                            leftTitles: AxisTitles(
-                              sideTitles: SideTitles(showTitles: false),
-                            ),
-                            rightTitles: AxisTitles(
-                              sideTitles: SideTitles(showTitles: false),
-                            ),
-                            topTitles: AxisTitles(
-                              sideTitles: SideTitles(showTitles: false),
-                            ),
+                            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                           ),
                           borderData: FlBorderData(show: false),
                           barGroups: List.generate(7, (index) {
+                            final value = (slouchPercentages.length > index)
+                                ? (slouchPercentages[index] * 100)
+                                : 0.0;
                             return BarChartGroupData(
                               x: index,
                               barRods: [
                                 BarChartRodData(
-                                  toY: (index + 2).toDouble(),
+                                  toY: value,
                                   width: 12,
-                                  color: const Color(0xFF7AC6D2),
                                   borderRadius: BorderRadius.circular(6),
                                   gradient: const LinearGradient(
                                     colors: [Color(0xFF7AC6D2), Color(0xFFB5FCCD)],
-                                    begin: Alignment.bottomCenter,
-                                    end: Alignment.topCenter,
                                   ),
                                 ),
                               ],
