@@ -4,6 +4,15 @@
 
 > ⚠️ This repository contains **only the mobile app source code**. The ESP32 firmware and hardware setup are maintained separately.
 
+GitHub Repo: [`git@github.com:venumigihansa/Posture-Guard.git`](https://github.com/venumigihansa/Posture-Guard)
+
+---
+
+## 👥 Team ignitrix
+
+### 1. Gihansa Venumi  
+
+
 ---
 
 ## 🚀 Features
@@ -21,7 +30,7 @@
 ### 📊 History & Insights
 - Local data persistence for offline use
 - **Posture history tracking** and visual trend charts
-- Weekly summaries and recommendations
+- Weekly summaries and exercise recommendations
 
 ---
 
@@ -43,7 +52,7 @@
 ### 🧩 Clone & Run
 
 ```bash
-git clone https://github.com/<your-username>/posture-guard-app.git
-cd posture-guard-app
+git clone git@github.com:venumigihansa/Posture-Guard.git
+cd Posture-Guard
 flutter pub get
 flutter run
