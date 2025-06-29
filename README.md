@@ -1,16 +1,49 @@
-# posture_guard
+# 📱 Posture Guard – Flutter App
 
-A new Flutter project.
+**Posture Guard** is a Flutter-based mobile application developed for the SLIoT Competition 2025. It promotes healthy posture habits by receiving real-time sensor data from an ESP32 device and delivering instant feedback to the user.
 
-## Getting Started
+> ⚠️ This repository contains **only the mobile app source code**. The ESP32 firmware and hardware setup are maintained separately.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## 🚀 Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 🔴 Real-Time Posture Monitoring
+- Live data stream from ESP32 via **MQTT**
+- Continuous **angle measurement** using IMU sensor data
+- Smart classification: **Good**, **Needs Improvement**, or **Bad Posture**
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 🔔 Smart Alerts & Feedback
+- Real-time **visual status indicators**
+- Customizable **sound** and **vibration** alerts
+- Adjustable **sensitivity thresholds**
+
+### 📊 History & Insights
+- Local data persistence for offline use
+- **Posture history tracking** and visual trend charts
+- Weekly summaries and recommendations
+
+---
+
+## 🔗 Data Communication
+
+- Secure communication over **MQTT**
+- Real-time sync with **ESP32 + IMU Sensor**
+- Tested with **HiveMQ Cloud** MQTT broker
+
+---
+
+## 🛠️ Setup & Installation
+
+### 📱 Prerequisites
+- Flutter SDK (latest stable version)
+- MQTT Broker (e.g., [HiveMQ Cloud](https://www.hivemq.com/mqtt-cloud-broker/))
+- ESP32 with IMU sensor (hardware not included in this repo)
+
+### 🧩 Clone & Run
+
+```bash
+git clone https://github.com/<your-username>/posture-guard-app.git
+cd posture-guard-app
+flutter pub get
+flutter run
