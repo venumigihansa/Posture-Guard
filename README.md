@@ -1,19 +1,11 @@
 # 📱 Posture Guard – Flutter App
 
-**Posture Guard** is a Flutter-based mobile application developed for the SLIoT Competition 2025. It promotes healthy posture habits by receiving real-time sensor data from an ESP32 device and delivering instant feedback to the user.
+**Posture Guard** is a Flutter-based mobile application developed by team ignitrix for the SLIoT Competition 2025. It promotes healthy posture habits by receiving real-time sensor data from an ESP32 device and delivering instant feedback to the user.
 
 > ⚠️ This repository contains **only the mobile app source code**. The ESP32 firmware and hardware setup are maintained separately.
 
 GitHub Repo: [`git@github.com:venumigihansa/Posture-Guard.git`](https://github.com/venumigihansa/Posture-Guard)
 
----
-
-## 👥 Team ignitrix
-
-### 1. Gihansa Venumi  
-
-
----
 
 ## 🚀 Features
 
